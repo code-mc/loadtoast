@@ -9,6 +9,8 @@ import net.steamcrafted.loadtoast.LoadToast;
 
 public class MainActivity extends Activity {
 
+    // Example activity
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

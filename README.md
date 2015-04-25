@@ -12,14 +12,8 @@ The default toasts are ugly and don't really provide much more than a short mess
 
 #### Gradle
 ```groovy
-android {
-    repositories {
-        maven { url "https://dl.bintray.com/codecrafted/maven" }
-    }
-}
-
 dependencies {
-    compile(group: 'net.steamcrafted', name: 'load-toast', version: '1.0.3', ext: 'aar')
+    compile 'net.steamcrafted:load-toast:1.0.3'
 }
 ```
 

@@ -14,10 +14,6 @@ android {
         targetCompatibility JavaVersion.VERSION_1_6
     }
 
-    repositories {
-        maven { url "https://dl.bintray.com/codecrafted/maven" }
-    }
-
     defaultConfig {
         applicationId "net.steamcrafted.gesturetrackerlib"
         minSdkVersion 15
@@ -35,5 +31,5 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile(group: 'net.steamcrafted', name: 'load-toast', version: '1.0.3', ext: 'aar')
+    compile 'net.steamcrafted:load-toast:1.0.3'
 }

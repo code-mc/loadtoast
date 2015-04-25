@@ -1,0 +1,9 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="android:Theme.DeviceDefault">
+        <item name="android:colorAccent">@color/color_accent</item>
+        <!-- Customize your theme here. -->
+    </style>
+
+</resources>

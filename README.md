@@ -6,6 +6,8 @@ The default toasts are ugly and don't really provide much more than a short mess
 
 ![](https://github.com/code-mc/loadtoast/blob/master/ani.gif)
 
+[Demo App](https://github.com/code-mc/loadtoast/blob/master/app/build/outputs/apk/app-debug.apk)
+
 # Usage
 
 ## Step 1

@@ -2,7 +2,6 @@ package net.steamcrafted.loadtoast;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Paint;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
@@ -13,11 +12,9 @@ import android.view.animation.DecelerateInterpolator;
 public class LoadToast {
 
     private String mText = "";
-    private Context mContext;
     private LoadToastView mView;
 
     public LoadToast(Context context){
-        mContext = context;
         mView = new LoadToastView(context);
         final ViewGroup vg = (ViewGroup) ((Activity) context).getWindow().getDecorView().findViewById(android.R.id.content);
         vg.addView(mView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));

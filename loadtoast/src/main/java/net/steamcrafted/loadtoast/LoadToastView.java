@@ -1,10 +1,8 @@
 package net.steamcrafted.loadtoast;
 
 import android.animation.ValueAnimator;
-import android.app.Application;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -13,9 +11,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.util.Log;
 import android.util.TypedValue;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
@@ -35,8 +31,6 @@ public class LoadToastView extends View {
     private Paint loaderPaint   = new Paint();
     private Paint successPaint  = new Paint();
     private Paint errorPaint    = new Paint();
-
-    private Context mContext;
 
     private Rect iconBounds;
     private Rect mTextBounds = new Rect();
@@ -61,7 +55,6 @@ public class LoadToastView extends View {
 
     public LoadToastView(Context context) {
         super(context);
-        mContext = context;
         textPaint.setTextSize(15);
         textPaint.setColor(Color.BLACK);
         textPaint.setAntiAlias(true);
@@ -148,7 +141,7 @@ public class LoadToastView extends View {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 WIDTH_SCALE = 2f*(valueAnimator.getAnimatedFraction());
-                Log.d("lt", "ws " + WIDTH_SCALE);
+                //Log.d("lt", "ws " + WIDTH_SCALE);
                 postInvalidate();
             }
         });
@@ -160,7 +153,7 @@ public class LoadToastView extends View {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
             TypedValue typedValue = new TypedValue();
 
-            TypedArray a = mContext.obtainStyledAttributes(typedValue.data, new int[] { android.R.attr.colorAccent });
+            TypedArray a = getContext().obtainStyledAttributes(typedValue.data, new int[] { android.R.attr.colorAccent });
             int color = a.getColor(0, 0);
 
             a.recycle();

@@ -86,7 +86,7 @@ public class LoadToastView extends View {
         //loadicon.setBounds(iconBounds);
         completeicon = getResources().getDrawable(R.drawable.ic_navigation_check);
         completeicon.setBounds(iconBounds);
-        failedicon = getResources().getDrawable(R.drawable.ic_navigation_close);
+        failedicon = getResources().getDrawable(R.drawable.ic_error);
         failedicon.setBounds(iconBounds);
 
         va = ValueAnimator.ofFloat(0,1);

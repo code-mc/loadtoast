@@ -2,6 +2,7 @@ package net.steamcrafted.loadtoast;
 
 import android.app.Activity;
 import android.content.Context;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
@@ -13,6 +14,7 @@ public class LoadToast {
 
     private String mText = "";
     private LoadToastView mView;
+    private int mTranslationY = 0;
 
     public LoadToast(Context context){
         mView = new LoadToastView(context);
@@ -21,10 +23,16 @@ public class LoadToast {
         vg.postDelayed(new Runnable() {
             @Override
             public void run() {
+                mView.setVisibility(View.GONE);
                 mView.setTranslationX((vg.getWidth() - mView.getWidth())/2);
-                mView.setTranslationY(-mView.getHeight());
+                mView.setTranslationY(-mView.getHeight() + mTranslationY);
             }
         },1);
+    }
+
+    public LoadToast setTranslationY(int pixels){
+        mTranslationY = pixels;
+        return this;
     }
 
     public LoadToast setText(String message){
@@ -50,10 +58,10 @@ public class LoadToast {
 
     public LoadToast show(){
         mView.show();
-        //mView.setVisibility(View.VISIBLE);
         mView.setAlpha(0f);
-        mView.setTranslationY(-mView.getHeight());
-        mView.animate().alpha(1f).translationY(25).setInterpolator(new DecelerateInterpolator())
+        mView.setTranslationY(-mView.getHeight() + mTranslationY);
+        mView.setVisibility(View.VISIBLE);
+        mView.animate().alpha(1f).translationY(25 + mTranslationY).setInterpolator(new DecelerateInterpolator())
                 .setDuration(300).setStartDelay(0).start();
         return this;
     }
@@ -69,7 +77,7 @@ public class LoadToast {
     }
 
     private void slideUp(){
-        mView.animate().setStartDelay(1000).alpha(0f).translationY(-mView.getHeight())
+        mView.animate().setStartDelay(1000).alpha(0f).translationY(-mView.getHeight() + mTranslationY)
                 .setInterpolator(new AccelerateInterpolator())
                 .setDuration(300).start();
     }

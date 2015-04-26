@@ -4,7 +4,7 @@ The default toasts are ugly and don't really provide much more than a short mess
 
 # Demo
 
-![](https://github.com/code-mc/loadtoast/blob/master/ani.gif)
+![](http://i.imgur.com/WwoxLMu.gif)
 
 # Usage
 

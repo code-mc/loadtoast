@@ -6,8 +6,6 @@ The default toasts are ugly and don't really provide much more than a short mess
 
 ![](https://github.com/code-mc/loadtoast/blob/master/ani.gif)
 
-[Demo App](https://github.com/code-mc/loadtoast/blob/master/app/build/outputs/apk/app-debug.apk)
-
 # Usage
 
 ## Step 1
@@ -47,6 +45,12 @@ lt.success();
 
 // Or this method if it failed
 lt.error();
+```
+
+If you are using translucent actionbar in a full screen activity it will appear over the actionbar, fortunately there is a method to change the y translation:
+
+```java
+lt.setTranslationY(100); // y offset in pixels
 ```
 
 You can also change the colors of the different toast elements:

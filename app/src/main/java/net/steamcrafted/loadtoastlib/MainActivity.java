@@ -1,6 +1,7 @@
 package net.steamcrafted.loadtoastlib;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -18,7 +19,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         final String text = "Sending reply...";
-        final LoadToast lt = new LoadToast(this).setText(text);
+        final LoadToast lt = new LoadToast(this).setText(text).show();
         findViewById(R.id.show).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -35,6 +36,14 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
                 lt.success();
+            }
+        });
+        findViewById(R.id.refresh).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = getIntent();
+                finish();
+                startActivity(intent);
             }
         });
     }

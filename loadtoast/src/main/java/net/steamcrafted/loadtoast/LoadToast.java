@@ -2,10 +2,12 @@ package net.steamcrafted.loadtoast;
 
 import android.app.Activity;
 import android.content.Context;
-import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+
+import com.nineoldandroids.view.ViewHelper;
+import com.nineoldandroids.view.ViewPropertyAnimator;
 
 /**
  * Created by Wannes2 on 23/04/2015.
@@ -15,17 +17,21 @@ public class LoadToast {
     private String mText = "";
     private LoadToastView mView;
     private int mTranslationY = 0;
+    private boolean mShowCalled = false;
+    private boolean mInflated = false;
 
     public LoadToast(Context context){
         mView = new LoadToastView(context);
         final ViewGroup vg = (ViewGroup) ((Activity) context).getWindow().getDecorView().findViewById(android.R.id.content);
         vg.addView(mView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        ViewHelper.setAlpha(mView, 0);
         vg.postDelayed(new Runnable() {
             @Override
             public void run() {
-                mView.setVisibility(View.GONE);
-                mView.setTranslationX((vg.getWidth() - mView.getWidth())/2);
-                mView.setTranslationY(-mView.getHeight() + mTranslationY);
+                ViewHelper.setTranslationX(mView, (vg.getWidth() - mView.getWidth()) / 2);
+                ViewHelper.setTranslationY(mView, -mView.getHeight() + mTranslationY);
+                mInflated = true;
+                if(mShowCalled) show();
             }
         },1);
     }
@@ -57,11 +63,16 @@ public class LoadToast {
     }
 
     public LoadToast show(){
+        if(!mInflated){
+            mShowCalled = true;
+            return this;
+        }
         mView.show();
-        mView.setAlpha(0f);
-        mView.setTranslationY(-mView.getHeight() + mTranslationY);
-        mView.setVisibility(View.VISIBLE);
-        mView.animate().alpha(1f).translationY(25 + mTranslationY).setInterpolator(new DecelerateInterpolator())
+        ViewHelper.setAlpha(mView, 0f);
+        ViewHelper.setTranslationY(mView, -mView.getHeight() + mTranslationY);
+        //mView.setVisibility(View.VISIBLE);
+        ViewPropertyAnimator.animate(mView).alpha(1f).translationY(25 + mTranslationY)
+                .setInterpolator(new DecelerateInterpolator())
                 .setDuration(300).setStartDelay(0).start();
         return this;
     }
@@ -77,7 +88,8 @@ public class LoadToast {
     }
 
     private void slideUp(){
-        mView.animate().setStartDelay(1000).alpha(0f).translationY(-mView.getHeight() + mTranslationY)
+        ViewPropertyAnimator.animate(mView).setStartDelay(1000).alpha(0f)
+                .translationY(-mView.getHeight() + mTranslationY)
                 .setInterpolator(new AccelerateInterpolator())
                 .setDuration(300).start();
     }

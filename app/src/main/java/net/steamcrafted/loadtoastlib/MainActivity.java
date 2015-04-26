@@ -18,7 +18,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         final String text = "Sending reply...";
-        final LoadToast lt = new LoadToast(this).setText(text).setTranslationY(100);
+        final LoadToast lt = new LoadToast(this).setText(text);
         findViewById(R.id.show).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

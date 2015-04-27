@@ -13,7 +13,7 @@ The default toasts are ugly and don't really provide much more than a short mess
 #### Gradle
 ```groovy
 dependencies {
-    compile 'net.steamcrafted:load-toast:1.0.5'
+    compile 'net.steamcrafted:load-toast:1.0.6'
 }
 ```
 

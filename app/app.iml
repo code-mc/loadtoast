@@ -88,7 +88,7 @@
     <orderEntry type="jdk" jdkName="Android API 22 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="library-2.4.0" level="project" />
-    <orderEntry type="library" exported="" name="load-toast-1.0.5" level="project" />
+    <orderEntry type="library" exported="" name="load-toast-1.0.6" level="project" />
   </component>
 </module>
 

@@ -2,7 +2,10 @@ package net.steamcrafted.loadtoast;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 
@@ -16,24 +19,32 @@ public class LoadToast {
 
     private String mText = "";
     private LoadToastView mView;
+    private ViewGroup mParentView;
     private int mTranslationY = 0;
     private boolean mShowCalled = false;
     private boolean mInflated = false;
 
     public LoadToast(Context context){
         mView = new LoadToastView(context);
-        final ViewGroup vg = (ViewGroup) ((Activity) context).getWindow().getDecorView().findViewById(android.R.id.content);
-        vg.addView(mView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        mParentView = (ViewGroup) ((Activity) context).getWindow().getDecorView().findViewById(android.R.id.content);
+        mParentView.addView(mView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         ViewHelper.setAlpha(mView, 0);
-        vg.postDelayed(new Runnable() {
+        mParentView.postDelayed(new Runnable() {
             @Override
             public void run() {
-                ViewHelper.setTranslationX(mView, (vg.getWidth() - mView.getWidth()) / 2);
+                ViewHelper.setTranslationX(mView, (mParentView.getWidth() - mView.getWidth()) / 2);
                 ViewHelper.setTranslationY(mView, -mView.getHeight() + mTranslationY);
                 mInflated = true;
                 if(mShowCalled) show();
             }
         },1);
+
+        mParentView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                checkZPosition();
+            }
+        });
     }
 
     public LoadToast setTranslationY(int pixels){
@@ -85,6 +96,17 @@ public class LoadToast {
     public void error(){
         mView.error();
         slideUp();
+    }
+
+    private void checkZPosition(){
+        int pos = mParentView.indexOfChild(mView);
+        int count = mParentView.getChildCount();
+        if(pos != count-1){
+            mParentView.removeView(mView);
+            mParentView.requestLayout();
+            mParentView.addView(mView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT));
+        }
     }
 
     private void slideUp(){

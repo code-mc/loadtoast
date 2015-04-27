@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 
 import net.steamcrafted.loadtoast.LoadToast;
 
@@ -19,7 +20,11 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         final String text = "Sending reply...";
-        final LoadToast lt = new LoadToast(this).setText(text).show();
+        final LoadToast lt = new LoadToast(this).setText(text).setTranslationY(100).show();
+        final ViewGroup root = (ViewGroup) findViewById(android.R.id.content);
+        View v = new View(this);
+        v.setBackgroundColor(Color.RED);
+        root.addView(v, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 400));
         findViewById(R.id.show).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -41,9 +46,9 @@ public class MainActivity extends Activity {
         findViewById(R.id.refresh).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = getIntent();
-                finish();
-                startActivity(intent);
+                View v = new View(MainActivity.this);
+                v.setBackgroundColor(Color.rgb((int)(Math.random() * 255), (int)(Math.random() * 255), (int)(Math.random() * 255)));
+                root.addView(v, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 400));
             }
         });
     }

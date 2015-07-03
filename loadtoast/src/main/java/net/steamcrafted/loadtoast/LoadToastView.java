@@ -211,6 +211,9 @@ public class LoadToastView extends View {
         super.onDraw(c);
 
         float ws = Math.max(1f - WIDTH_SCALE, 0f);
+        // If there is nothing to display, just draw a circle
+        if(mText.length() == 0) ws = 0;
+
         float translateLoad = (1f-ws)*(IMAGE_WIDTH+MAX_TEXT_WIDTH);
         float leftMargin = translateLoad/2;
         float textOpactity = Math.max(0, ws * 10f - 9f);
@@ -255,6 +258,11 @@ public class LoadToastView extends View {
         //Log.d("spin", "rot " + progrot + " len " + proglength);
 
         toastPath.reset();
+
+        if(mText.length() == 0){
+            ws = Math.max(1f - WIDTH_SCALE, 0f);
+        }
+
         toastPath.arcTo(spinnerRect, 180 * progrot, Math.min((200 / .75f) * proglength + 1 + 560*(1f-ws),359.9999f));
         loaderPaint.setAlpha((int)(255 * ws));
         c.drawPath(toastPath, loaderPaint);

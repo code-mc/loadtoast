@@ -22,6 +22,7 @@ public class LoadToast {
     private ViewGroup mParentView;
     private int mTranslationY = 0;
     private boolean mShowCalled = false;
+    private boolean mToastCanceled = false;
     private boolean mInflated = false;
 
     public LoadToast(Context context){
@@ -35,7 +36,7 @@ public class LoadToast {
                 ViewHelper.setTranslationX(mView, (mParentView.getWidth() - mView.getWidth()) / 2);
                 ViewHelper.setTranslationY(mView, -mView.getHeight() + mTranslationY);
                 mInflated = true;
-                if(mShowCalled) show();
+                if(!mToastCanceled && mShowCalled) show();
             }
         },1);
 
@@ -90,11 +91,19 @@ public class LoadToast {
     }
 
     public void success(){
+        if(!mInflated){
+            mToastCanceled = true;
+            return;
+        }
         mView.success();
         slideUp();
     }
 
     public void error(){
+        if(!mInflated){
+            mToastCanceled = true;
+            return;
+        }
         mView.error();
         slideUp();
     }

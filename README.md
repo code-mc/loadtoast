@@ -13,7 +13,7 @@ The default toasts are ugly and don't really provide much more than a short mess
 #### Gradle
 ```groovy
 dependencies {
-    compile 'net.steamcrafted:load-toast:1.0.7'
+    compile 'net.steamcrafted:load-toast:1.0.8'
 }
 ```
 
@@ -30,6 +30,8 @@ Change the displayed text:
 ```java
 lt.setText("Sending Reply...");
 ```
+
+If you don't have a message to display, the toast will shrink to only show the circular loader.
 
 Then proceed to show the toast:
 

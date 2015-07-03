@@ -19,7 +19,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final String text = "Sending reply...";
+        final String text = "abcdefghijklmnopq";
         final LoadToast lt = new LoadToast(this).setText(text).setTranslationY(100).show();
         final ViewGroup root = (ViewGroup) findViewById(android.R.id.content);
         View v = new View(this);

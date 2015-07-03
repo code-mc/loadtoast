@@ -2,6 +2,7 @@ package net.steamcrafted.loadtoast;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -43,6 +44,9 @@ public class LoadToastView extends View {
     private int IMAGE_WIDTH     = 40;
     private int TOAST_HEIGHT    = 48;
     private float WIDTH_SCALE = 0f;
+    private int MARQUE_STEP = 1;
+
+    private long prevUpdate = 0;
 
     private Drawable completeicon;
     private Drawable failedicon;
@@ -51,6 +55,7 @@ public class LoadToastView extends View {
     private ValueAnimator cmp;
 
     private boolean success = true;
+    private boolean outOfBounds = false;
 
     private Path toastPath = new Path();
     private AccelerateDecelerateInterpolator easeinterpol = new AccelerateDecelerateInterpolator();
@@ -81,6 +86,7 @@ public class LoadToastView extends View {
         BASE_TEXT_SIZE = dpToPx(BASE_TEXT_SIZE);
         IMAGE_WIDTH = dpToPx(IMAGE_WIDTH);
         TOAST_HEIGHT = dpToPx(TOAST_HEIGHT);
+        MARQUE_STEP = dpToPx(MARQUE_STEP);
 
         int padding = (TOAST_HEIGHT - IMAGE_WIDTH)/2;
         iconBounds = new Rect(TOAST_HEIGHT + MAX_TEXT_WIDTH - padding, padding, TOAST_HEIGHT + MAX_TEXT_WIDTH - padding + IMAGE_WIDTH, IMAGE_WIDTH + padding);
@@ -175,6 +181,9 @@ public class LoadToastView extends View {
     }
 
     private void calculateBounds() {
+        outOfBounds = false;
+        prevUpdate = 0;
+
         textPaint.setTextSize(BASE_TEXT_SIZE);
         textPaint.getTextBounds(mText, 0, mText.length(), mTextBounds);
         if(mTextBounds.width() > MAX_TEXT_WIDTH){
@@ -186,11 +195,14 @@ public class LoadToastView extends View {
                 textPaint.getTextBounds(mText, 0, mText.length(), mTextBounds);
             }
             if(mTextBounds.width() > MAX_TEXT_WIDTH){
+                outOfBounds = true;
+                /**
                 float keep = (float)MAX_TEXT_WIDTH / (float)mTextBounds.width();
                 int charcount = (int)(mText.length() * keep);
                 //Log.d("calc", "keep " + charcount + " per " + keep + " len " + mText.length());
                 mText = mText.substring(0, charcount);
                 textPaint.getTextBounds(mText, 0, mText.length(), mTextBounds);
+                **/
             }
         }
     }
@@ -232,8 +244,6 @@ public class LoadToastView extends View {
         c.drawCircle(spinnerRect.centerX(), spinnerRect.centerY(), iconBounds.height() / 1.9f, backPaint);
         //loadicon.draw(c);
         c.drawPath(toastPath, backPaint);
-        int yPos = (int) ((th / 2) - ((textPaint.descent() + textPaint.ascent()) / 2)) ;
-        c.drawText(mText, 0, mText.length(), th / 2 + (MAX_TEXT_WIDTH - mTextBounds.width()) / 2, yPos, textPaint);
 
         float prog = va.getAnimatedFraction() * 6.0f;
         float progrot = prog % 2.0f;
@@ -262,6 +272,28 @@ public class LoadToastView extends View {
             c.rotate(90*(1f-circleProg), leftMargin + TOAST_HEIGHT/2, TOAST_HEIGHT/2);
             icon.draw(c);
             c.restore();
+
+            prevUpdate = 0;
+            return;
+        }
+
+        int yPos = (int) ((th / 2) - ((textPaint.descent() + textPaint.ascent()) / 2)) ;
+
+        if(outOfBounds){
+            float shift = 0;
+            if(prevUpdate == 0){
+                prevUpdate = System.currentTimeMillis();
+            }else{
+                shift = ((float)(System.currentTimeMillis() - prevUpdate) / 16f) * MARQUE_STEP;
+
+                if(shift - MAX_TEXT_WIDTH > mTextBounds.width()){
+                    prevUpdate = 0;
+                }
+            }
+            c.clipRect(th / 2, 0, th/2 + MAX_TEXT_WIDTH, TOAST_HEIGHT);
+            c.drawText(mText, th / 2 - shift + MAX_TEXT_WIDTH, yPos, textPaint);
+        }else{
+            c.drawText(mText, 0, mText.length(), th / 2 + (MAX_TEXT_WIDTH - mTextBounds.width()) / 2, yPos, textPaint);
         }
         //c.drawArc(spinnerRect, 360 * progrot, 200 * proglength + 1, true, loaderPaint);
     }

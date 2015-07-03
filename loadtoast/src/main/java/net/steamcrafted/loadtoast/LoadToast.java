@@ -79,6 +79,7 @@ public class LoadToast {
             return this;
         }
         mView.show();
+        ViewHelper.setTranslationX(mView, (mParentView.getWidth() - mView.getWidth()) / 2);
         ViewHelper.setAlpha(mView, 0f);
         ViewHelper.setTranslationY(mView, -mView.getHeight() + mTranslationY);
         //mView.setVisibility(View.VISIBLE);

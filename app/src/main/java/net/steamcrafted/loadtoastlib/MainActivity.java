@@ -5,17 +5,16 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 
 import net.steamcrafted.loadtoast.LoadToast;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
 
     // Example activity
-
-    int delay = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

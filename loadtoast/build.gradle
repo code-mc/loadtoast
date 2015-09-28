@@ -3,12 +3,12 @@ apply plugin: 'com.android.library'
 ext {
     PUBLISH_GROUP_ID = 'net.steamcrafted'
     PUBLISH_ARTIFACT_ID = 'load-toast'
-    PUBLISH_VERSION = '1.0.8'
+    PUBLISH_VERSION = '1.0.9'
 }
 
 android {
     compileSdkVersion 22
-    buildToolsVersion "21.1.1"
+    buildToolsVersion "22.0.1"
 
     defaultConfig {
         minSdkVersion 8

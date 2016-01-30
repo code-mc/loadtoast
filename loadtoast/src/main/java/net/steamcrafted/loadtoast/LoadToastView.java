@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
+import android.widget.ImageView;
 
 import com.nineoldandroids.animation.ValueAnimator;
 
@@ -24,7 +25,7 @@ import com.nineoldandroids.animation.ValueAnimator;
 /**
 * Created by Wannes2 on 23/04/2015.
 */
-public class LoadToastView extends View {
+public class LoadToastView extends ImageView {
 
     private String mText = "";
 
@@ -43,8 +44,9 @@ public class LoadToastView extends View {
     private int BASE_TEXT_SIZE  = 20;
     private int IMAGE_WIDTH     = 40;
     private int TOAST_HEIGHT    = 48;
-    private float WIDTH_SCALE = 0f;
-    private int MARQUE_STEP = 1;
+    private int LINE_WIDTH      = 3;
+    private float WIDTH_SCALE   = 0f;
+    private int MARQUE_STEP     = 1;
 
     private long prevUpdate = 0;
 
@@ -59,6 +61,7 @@ public class LoadToastView extends View {
 
     private Path toastPath = new Path();
     private AccelerateDecelerateInterpolator easeinterpol = new AccelerateDecelerateInterpolator();
+    private MaterialProgressDrawable spinnerDrawable;
 
     public LoadToastView(Context context) {
         super(context);
@@ -86,6 +89,7 @@ public class LoadToastView extends View {
         BASE_TEXT_SIZE = dpToPx(BASE_TEXT_SIZE);
         IMAGE_WIDTH = dpToPx(IMAGE_WIDTH);
         TOAST_HEIGHT = dpToPx(TOAST_HEIGHT);
+        LINE_WIDTH = dpToPx(LINE_WIDTH);
         MARQUE_STEP = dpToPx(MARQUE_STEP);
 
         int padding = (TOAST_HEIGHT - IMAGE_WIDTH)/2;
@@ -111,7 +115,34 @@ public class LoadToastView extends View {
         va.setInterpolator(new LinearInterpolator());
         va.start();
 
+        initSpinner();
+
         calculateBounds();
+    }
+
+    private void initSpinner(){
+        spinnerDrawable = new MaterialProgressDrawable(getContext(), this);
+
+        spinnerDrawable.setStartEndTrim(0, .5f);
+        spinnerDrawable.setProgressRotation(.5f);
+
+        int mDiameter = TOAST_HEIGHT;
+        int mProgressStokeWidth = LINE_WIDTH;
+        spinnerDrawable.setSizeParameters(mDiameter, mDiameter,
+                (mDiameter - mProgressStokeWidth * 2) / 4,
+                mProgressStokeWidth,
+                mProgressStokeWidth * 4,
+                mProgressStokeWidth * 2);
+
+        spinnerDrawable.setBackgroundColor(Color.TRANSPARENT);
+        spinnerDrawable.setColorSchemeColors(loaderPaint.getColor());
+        spinnerDrawable.setVisible(true, false);
+        spinnerDrawable.setAlpha(255);
+
+        setImageDrawable(null);
+        setImageDrawable(spinnerDrawable);
+
+        spinnerDrawable.start();
     }
 
     public void setTextColor(int color){
@@ -125,6 +156,7 @@ public class LoadToastView extends View {
 
     public void setProgressColor(int color){
         loaderPaint.setColor(color);
+        spinnerDrawable.setColorSchemeColors(color);
     }
 
     public void show(){
@@ -158,17 +190,17 @@ public class LoadToastView extends View {
     }
 
     private int fetchPrimaryColor() {
+        int color = Color.rgb(155, 155, 155);
+
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
             TypedValue typedValue = new TypedValue();
 
-            TypedArray a = getContext().obtainStyledAttributes(typedValue.data, new int[] { android.R.attr.colorAccent });
-            int color = a.getColor(0, 0);
+            TypedArray a = getContext().obtainStyledAttributes(typedValue.data, new int[]{android.R.attr.colorAccent});
+            color = a.getColor(0, color);
 
             a.recycle();
-
-            return color;
         }
-        return Color.rgb(155,155,155);
+        return color;
     }
 
     private int dpToPx(int dp){
@@ -208,8 +240,6 @@ public class LoadToastView extends View {
     }
     @Override
     protected void onDraw(Canvas c){
-        super.onDraw(c);
-
         float ws = Math.max(1f - WIDTH_SCALE, 0f);
         // If there is nothing to display, just draw a circle
         if(mText.length() == 0) ws = 0;
@@ -226,6 +256,8 @@ public class LoadToastView extends View {
         int pd = (TOAST_HEIGHT - IMAGE_WIDTH)/2;
         int iconoffset = (int)(IMAGE_WIDTH*2*(Math.sqrt(2)-1)/3);
         int iw = IMAGE_WIDTH;
+
+        float totalWidth = leftMargin * 2 + th + ws*(IMAGE_WIDTH + MAX_TEXT_WIDTH) - translateLoad;
 
         toastPath.reset();
         toastPath.moveTo(leftMargin + th / 2, 0);
@@ -245,8 +277,9 @@ public class LoadToastView extends View {
         toastPath.rCubicTo(0, -circleOffset, -circleOffset + th / 2, -th / 2, th / 2, -th / 2);
 
         c.drawCircle(spinnerRect.centerX(), spinnerRect.centerY(), iconBounds.height() / 1.9f, backPaint);
-        //loadicon.draw(c);
+
         c.drawPath(toastPath, backPaint);
+        toastPath.reset();
 
         float prog = va.getAnimatedFraction() * 6.0f;
         float progrot = prog % 2.0f;
@@ -255,17 +288,17 @@ public class LoadToastView extends View {
             proglength = .75f - (prog % 3f - 1.5f);
             progrot += (prog % 3f - 1.5f)/1.5f * 2f;
         }
-        //Log.d("spin", "rot " + progrot + " len " + proglength);
-
-        toastPath.reset();
 
         if(mText.length() == 0){
             ws = Math.max(1f - WIDTH_SCALE, 0f);
         }
 
-        toastPath.arcTo(spinnerRect, 180 * progrot, Math.min((200 / .75f) * proglength + 1 + 560*(1f-ws),359.9999f));
-        loaderPaint.setAlpha((int)(255 * ws));
-        c.drawPath(toastPath, loaderPaint);
+        c.save();
+
+        c.translate((totalWidth - TOAST_HEIGHT)/2, 0);
+        super.onDraw(c);
+
+        c.restore();
 
         if(WIDTH_SCALE > 1f){
             Drawable icon = (success) ? completeicon : failedicon;
@@ -303,7 +336,6 @@ public class LoadToastView extends View {
         }else{
             c.drawText(mText, 0, mText.length(), th / 2 + (MAX_TEXT_WIDTH - mTextBounds.width()) / 2, yPos, textPaint);
         }
-        //c.drawArc(spinnerRect, 360 * progrot, 200 * proglength + 1, true, loaderPaint);
     }
 
     @Override

@@ -8,12 +8,6 @@ android {
         abortOnError false
     }
 
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_6
-        targetCompatibility JavaVersion.VERSION_1_6
-    }
-
     defaultConfig {
         applicationId "net.steamcrafted.gesturetrackerlib"
         minSdkVersion 8

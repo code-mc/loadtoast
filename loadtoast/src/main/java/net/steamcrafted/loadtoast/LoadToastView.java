@@ -394,4 +394,11 @@ public class LoadToastView extends ImageView {
         return result;
     }
 
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+
+        if(cmp != null) cmp.removeAllUpdateListeners();
+        if(va != null) va.removeAllUpdateListeners();
+    }
 }

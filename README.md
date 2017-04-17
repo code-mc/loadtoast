@@ -63,6 +63,6 @@ lt.setTextColor(Color.RED).setBackgroundColor(Color.GREEN).setProgressColor(Colo
 
 These can be chained as you can see.
 
-#License
+# License
 
 Released under the [Apache 2.0 License](https://github.com/code-mc/loadtoast/blob/master/license.md)

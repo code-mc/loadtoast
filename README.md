@@ -13,7 +13,7 @@ The default toasts are ugly and don't really provide much more than a short mess
 #### Gradle
 ```groovy
 dependencies {
-    compile 'net.steamcrafted:load-toast:1.0.10'
+    compile 'net.steamcrafted:load-toast:1.0.11'
 }
 ```
 
@@ -49,7 +49,7 @@ lt.success();
 lt.error();
 ```
 
-If you are using translucent actionbar in a full screen activity it will appear over the actionbar, fortunately there is a method to change the y translation:
+To properly position the toast use the following method to adjust the Y offset:
 
 ```java
 lt.setTranslationY(100); // y offset in pixels
@@ -59,6 +59,13 @@ You can also change the colors of the different toast elements:
 
 ```java
 lt.setTextColor(Color.RED).setBackgroundColor(Color.GREEN).setProgressColor(Color.BLUE);
+```
+
+When displaying a message in a RTL language you can force the text to marquee from left to right instead of the default right to left:
+
+```java
+// pass in false for RTL text, true for LTR text
+lt.setTextDirection(boolean isLeftToRight);
 ```
 
 These can be chained as you can see.

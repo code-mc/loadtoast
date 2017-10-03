@@ -436,10 +436,12 @@ public class LoadToastView extends ImageView {
             cmp.removeAllUpdateListeners();
             cmp.removeAllListeners();
         }
-        
+
         if(va != null){
             va.removeAllUpdateListeners();
             va.removeAllListeners();
         }
+
+        spinnerDrawable.stop();
     }
 }

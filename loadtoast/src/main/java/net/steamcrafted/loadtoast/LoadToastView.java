@@ -430,7 +430,16 @@ public class LoadToastView extends ImageView {
 
     @Override
     protected void onDetachedFromWindow() {
-        Log.d(getClass().getSimpleName(), "view detached");
         super.onDetachedFromWindow();
+
+        if(cmp != null){
+            cmp.removeAllUpdateListeners();
+            cmp.removeAllListeners();
+        }
+        
+        if(va != null){
+            va.removeAllUpdateListeners();
+            va.removeAllListeners();
+        }
     }
 }

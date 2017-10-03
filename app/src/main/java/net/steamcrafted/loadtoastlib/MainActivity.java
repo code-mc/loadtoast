@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final String text = "dsfdsf";
+        final String text = "dhfbsd kjsdfjnskdfs dfs";
         final LoadToast lt = new LoadToast(this).setProgressColor(Color.RED).setText(text).setTranslationY(100).show();
         //lt.success();
         final ViewGroup root = (ViewGroup) findViewById(android.R.id.content);

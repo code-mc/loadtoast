@@ -60,6 +60,7 @@ public class LoadToastView extends ImageView {
 
     private boolean success = true;
     private boolean outOfBounds = false;
+    private boolean mLtr = true;
 
     private Path toastPath = new Path();
     private AccelerateDecelerateInterpolator easeinterpol = new AccelerateDecelerateInterpolator();
@@ -149,6 +150,10 @@ public class LoadToastView extends ImageView {
 
     public void setTextColor(int color){
         textPaint.setColor(color);
+    }
+
+    public void setTextDirection(boolean isLeftToRight){
+        mLtr = isLeftToRight;
     }
 
     public void setBackgroundColor(int color){
@@ -357,7 +362,11 @@ public class LoadToastView extends ImageView {
                 }
             }
             c.clipRect(th / 2, 0, th/2 + MAX_TEXT_WIDTH, TOAST_HEIGHT);
-            c.drawText(mText, th / 2 - shift + MAX_TEXT_WIDTH, yPos, textPaint);
+            if (!mLtr || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && getTextDirection() == TEXT_DIRECTION_ANY_RTL)) {
+                c.drawText(mText, th / 2 - mTextBounds.width() + shift, yPos, textPaint);
+            }else{
+                c.drawText(mText, th / 2 - shift + MAX_TEXT_WIDTH, yPos, textPaint);
+            }
         }else{
             c.drawText(mText, 0, mText.length(), th / 2 + (MAX_TEXT_WIDTH - mTextBounds.width()) / 2, yPos, textPaint);
         }

@@ -72,6 +72,11 @@ public class LoadToast {
         return this;
     }
 
+    public LoadToast setTextDirection(boolean isLeftToRight){
+        mView.setTextDirection(isLeftToRight);
+        return this;
+    }
+
     public LoadToast show(){
         mShowCalled = true;
         attach();

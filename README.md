@@ -61,6 +61,18 @@ You can also change the colors of the different toast elements:
 lt.setTextColor(Color.RED).setBackgroundColor(Color.GREEN).setProgressColor(Color.BLUE);
 ```
 
+In some situations a border might be desired for increased visibility, by default it is transparent:
+
+```java
+// Change the border color
+lt.setBorderColor(int color);
+
+// Change the border width
+lt.setBorderWidthPx(int widthPx);
+lt.setBorderWidthDp(int widthDp);
+lt.setBorderWidthRes(int resourceId);
+```
+
 When displaying a message in a RTL language you can force the text to marquee from left to right instead of the default right to left:
 
 ```java

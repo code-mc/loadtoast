@@ -2,10 +2,8 @@ package net.steamcrafted.loadtoast;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
-import android.view.View;
+import android.content.res.Resources;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 
@@ -18,7 +16,6 @@ import com.nineoldandroids.view.ViewPropertyAnimator;
  * Created by Wannes2 on 23/04/2015.
  */
 public class LoadToast {
-
     private String mText = "";
     private LoadToastView mView;
     private ViewGroup mParentView;
@@ -38,6 +35,8 @@ public class LoadToast {
         int childCount = mParentView.getChildCount();
         for(int i = childCount; i >= 0; i--){
             if(mParentView.getChildAt(i) instanceof LoadToastView){
+                LoadToastView ltv = (LoadToastView) mParentView.getChildAt(i);
+                ltv.cleanup();
                 mParentView.removeViewAt(i);
             }
         }
@@ -74,6 +73,26 @@ public class LoadToast {
 
     public LoadToast setTextDirection(boolean isLeftToRight){
         mView.setTextDirection(isLeftToRight);
+        return this;
+    }
+
+    public LoadToast setBorderColor(int color){
+        mView.setBorderColor(color);
+        return this;
+    }
+
+    public LoadToast setBorderWidthPx(int width){
+        mView.setBorderWidthPx(width);
+        return this;
+    }
+
+    public LoadToast setBorderWidthRes(int resourceId){
+        mView.setBorderWidthRes(resourceId);
+        return this;
+    }
+
+    public LoadToast setBorderWidthDp(int width){
+        mView.setBorderWidthDp(width);
         return this;
     }
 
@@ -137,10 +156,24 @@ public class LoadToast {
         }
     }
 
+    public void hide(){
+        if(!mInflated){
+            mToastCanceled = true;
+            return;
+        }
+        if(mReAttached){
+            slideUp(0);
+        }
+    }
+
     private void slideUp(){
+        slideUp(1000);
+    }
+
+    private void slideUp(int startDelay){
         mReAttached = false;
 
-        ViewPropertyAnimator.animate(mView).setStartDelay(1000).alpha(0f)
+        ViewPropertyAnimator.animate(mView).setStartDelay(startDelay).alpha(0f)
                 .translationY(-mView.getHeight() + mTranslationY)
                 .setInterpolator(new AccelerateInterpolator())
                 .setDuration(300)

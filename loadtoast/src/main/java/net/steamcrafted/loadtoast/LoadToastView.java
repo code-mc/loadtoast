@@ -37,6 +37,7 @@ public class LoadToastView extends ImageView {
     private Paint loaderPaint   = new Paint();
     private Paint successPaint  = new Paint();
     private Paint errorPaint    = new Paint();
+    private Paint borderPaint   = new Paint();
 
     private Rect iconBounds;
     private Rect mTextBounds = new Rect();
@@ -66,6 +67,8 @@ public class LoadToastView extends ImageView {
     private AccelerateDecelerateInterpolator easeinterpol = new AccelerateDecelerateInterpolator();
     private MaterialProgressDrawable spinnerDrawable;
 
+    private int borderOffset = dpToPx(1);
+
     public LoadToastView(Context context) {
         super(context);
         textPaint.setTextSize(15);
@@ -82,6 +85,11 @@ public class LoadToastView extends ImageView {
         loaderPaint.setAntiAlias(true);
         loaderPaint.setColor(fetchPrimaryColor());
         loaderPaint.setStyle(Paint.Style.STROKE);
+
+        borderPaint.setAntiAlias(true);
+        borderPaint.setStrokeWidth(borderOffset * 2);
+        borderPaint.setColor(Color.TRANSPARENT);
+        borderPaint.setStyle(Paint.Style.STROKE);
 
         successPaint.setColor(getResources().getColor(R.color.color_success));
         errorPaint.setColor(getResources().getColor(R.color.color_error));
@@ -166,6 +174,23 @@ public class LoadToastView extends ImageView {
         spinnerDrawable.setColorSchemeColors(color);
     }
 
+    public void setBorderColor(int color){
+        borderPaint.setColor(color);
+    }
+
+    public void setBorderWidthPx(int widthPx){
+        borderOffset = widthPx / 2;
+        borderPaint.setStrokeWidth(borderOffset * 2);
+    }
+
+    public void setBorderWidthRes(int resourceId){
+        setBorderWidthPx(getResources().getDimensionPixelSize(resourceId));
+    }
+
+    public void setBorderWidthDp(int width){
+        setBorderWidthPx(dpToPx(width));
+    }
+
     public void show(){
         spinnerDrawable.stop();
         spinnerDrawable.start();
@@ -209,10 +234,6 @@ public class LoadToastView extends ImageView {
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
                 cleanup();
-            }
-
-            private void cleanup() {
-                spinnerDrawable.stop();
             }
         });
         cmp.setInterpolator(new DecelerateInterpolator());
@@ -309,6 +330,20 @@ public class LoadToastView extends ImageView {
         c.drawCircle(spinnerRect.centerX(), spinnerRect.centerY(), iconBounds.height() / 1.9f, backPaint);
 
         c.drawPath(toastPath, backPaint);
+
+        int thb = th - borderOffset*2;
+
+        toastPath.reset();
+        toastPath.moveTo(leftMargin + th / 2, borderOffset);
+        toastPath.rLineTo(ws*(IMAGE_WIDTH + MAX_TEXT_WIDTH), 0);
+        toastPath.rCubicTo(circleOffset, 0, thb / 2, thb / 2 - circleOffset, thb / 2, thb / 2);
+
+        toastPath.rCubicTo(0, circleOffset, circleOffset - thb / 2, thb / 2, -thb / 2, thb / 2);
+        toastPath.rLineTo(ws*(-IMAGE_WIDTH - MAX_TEXT_WIDTH), 0);
+        toastPath.rCubicTo(-circleOffset, 0, -thb / 2, -thb / 2 + circleOffset, -thb / 2, -thb / 2);
+        toastPath.rCubicTo(0, -circleOffset, -circleOffset + thb / 2, -thb / 2, thb / 2, -thb / 2);
+
+        c.drawPath(toastPath, borderPaint);
         toastPath.reset();
 
         float prog = va.getAnimatedFraction() * 6.0f;
@@ -431,7 +466,11 @@ public class LoadToastView extends ImageView {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+        Log.d(getClass().getSimpleName(), "detached");
+        cleanup();
+    }
 
+    public void cleanup(){
         if(cmp != null){
             cmp.removeAllUpdateListeners();
             cmp.removeAllListeners();

@@ -164,7 +164,6 @@ public class LoadToastView extends ImageView {
     public void show(){
         spinnerDrawable.stop();
         spinnerDrawable.start();
-        spinnerDrawable.setAlpha(255);
 
         WIDTH_SCALE = 0f;
         if(cmp != null){
@@ -209,7 +208,6 @@ public class LoadToastView extends ImageView {
 
             private void cleanup() {
                 spinnerDrawable.stop();
-                spinnerDrawable.setAlpha(0);
             }
         });
         cmp.setInterpolator(new DecelerateInterpolator());
@@ -423,8 +421,7 @@ public class LoadToastView extends ImageView {
 
     @Override
     protected void onDetachedFromWindow() {
-        Log.d("view", "view detached");
-
+        Log.d(getClass().getSimpleName(), "view detached");
         super.onDetachedFromWindow();
     }
 }

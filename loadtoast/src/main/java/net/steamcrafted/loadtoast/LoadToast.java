@@ -35,17 +35,12 @@ public class LoadToast {
     }
 
     private void cleanup() {
-        Log.d("dfsd", "called cleanup " + mParentView.getChildCount());
         int childCount = mParentView.getChildCount();
         for(int i = childCount; i >= 0; i--){
             if(mParentView.getChildAt(i) instanceof LoadToastView){
-                View v = mParentView.getChildAt(i);
-                ((ViewGroup)v.getParent()).removeView(v);
-//                Log.d("sdfsdf", "removed child loadtoast");
+                mParentView.removeViewAt(i);
             }
         }
-
-        Log.d("dfsd", "after cleanup " + mParentView.getChildCount());
 
         mInflated = false;
         mToastCanceled = false;
@@ -148,7 +143,6 @@ public class LoadToast {
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         if(!mReAttached){
-                            Log.d("animation end","end " + (animation != null));
                             cleanup();
                         }
                     }

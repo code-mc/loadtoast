@@ -47,6 +47,9 @@ lt.success();
 
 // Or this method if it failed
 lt.error();
+
+// Or if no feedback is desired you can simply hide the toast
+lt.hide();
 ```
 
 To properly position the toast use the following method to adjust the Y offset:

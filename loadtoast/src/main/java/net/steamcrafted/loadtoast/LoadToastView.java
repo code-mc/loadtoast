@@ -19,6 +19,8 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.ValueAnimator;
 
 
@@ -160,8 +162,15 @@ public class LoadToastView extends ImageView {
     }
 
     public void show(){
+        spinnerDrawable.stop();
+        spinnerDrawable.start();
+        spinnerDrawable.setAlpha(255);
+
         WIDTH_SCALE = 0f;
-        if(cmp != null) cmp.removeAllUpdateListeners();
+        if(cmp != null){
+            cmp.removeAllUpdateListeners();
+            cmp.removeAllListeners();
+        }
     }
 
     public void success(){
@@ -183,6 +192,24 @@ public class LoadToastView extends ImageView {
                 WIDTH_SCALE = 2f*(valueAnimator.getAnimatedFraction());
                 //Log.d("lt", "ws " + WIDTH_SCALE);
                 postInvalidate();
+            }
+        });
+        cmp.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                super.onAnimationCancel(animation);
+                cleanup();
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                cleanup();
+            }
+
+            private void cleanup() {
+                spinnerDrawable.stop();
+                spinnerDrawable.setAlpha(0);
             }
         });
         cmp.setInterpolator(new DecelerateInterpolator());
@@ -394,4 +421,10 @@ public class LoadToastView extends ImageView {
         return result;
     }
 
+    @Override
+    protected void onDetachedFromWindow() {
+        Log.d("view", "view detached");
+
+        super.onDetachedFromWindow();
+    }
 }

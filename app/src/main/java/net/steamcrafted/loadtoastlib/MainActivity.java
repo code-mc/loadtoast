@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final String text = "";
+        final String text = "dsfdsf";
         final LoadToast lt = new LoadToast(this).setProgressColor(Color.RED).setText(text).setTranslationY(100).show();
         //lt.success();
         final ViewGroup root = (ViewGroup) findViewById(android.R.id.content);
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 View v = new View(MainActivity.this);
                 v.setBackgroundColor(Color.rgb((int) (Math.random() * 255), (int) (Math.random() * 255), (int) (Math.random() * 255)));
-                //root.addView(v, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 400));
+                root.addView(v, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 400));
             }
         });
 
